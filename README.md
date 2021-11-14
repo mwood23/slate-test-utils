@@ -8,6 +8,48 @@ Unfortunately this isn't plug and play. If you have any experience with contente
 
 TODO
 
+## API
+
+Write tests like your users!
+
+```ts
+it('user triggers bold hotkey and types with a collapsed selection', async () => {
+  const input = (
+    <editor>
+      <hp>
+        <htext>
+          potato
+          <cursor />
+        </htext>
+      </hp>
+    </editor>
+  )
+
+  const [editor, { triggerKeyboardEvent, type }] = await renderEditor(
+    RichTextExample,
+  )({
+    editor: input,
+  })
+
+  await triggerKeyboardEvent('mod+b')
+  await type(' cucumbers')
+
+  assertOutput(
+    editor,
+    <editor>
+      <hp>
+        <htext>potato</htext>
+        <htext bold>
+          {' '}
+          cucumbers
+          <cursor />
+        </htext>
+      </hp>
+    </editor>,
+  )
+})
+```
+
 ## Issues
 
 - The new automatic JSX runtime with typescript `react-jsx` doesn't play nice with custom hyperscript. You will need to create a typescript file specific for your tests and use `"jsx": "react"`.
