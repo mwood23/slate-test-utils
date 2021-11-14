@@ -1,6 +1,6 @@
-## Slate Test Utils
+# Slate Test Utils
 
-A toolkit to test Slate rich text editors with Jest, React Testing Library, and hyperscript! Write user driven integration tests with ease.
+A toolkit to test Slate rich text editors with Jest, React Testing Library, and hyperscript! Write user centric integration tests with ease.
 
 - 🚀 Works with Jest, React Testing Library, and JSDOM (Create React App and Vite friendly)
 - 🙏 Out of the box support for testing: typing, selection, keyboard events, beforeInput events, normalization, history, operations,
@@ -249,7 +249,7 @@ The first line sets the pragma that will parse your hyperscript. The second line
 
 The test utils export a few methods that help you create user centric tests for your editor.
 
-### BuiltTestHarness
+### BuildTestHarness
 
 A test harness for the RichTextEditor that adds custom queries to assert on, lots of simulated actions, and a custom rerender in case you want to assert on the DOM. In most cases, you'll want to assert directly on the editor state to check that the editor selection and other pieces of the editor are working as intended.
 
@@ -303,6 +303,23 @@ testID?: string
 const [editor, { triggerKeyboardEvent, type }] = await buildTestHarness(
   RichTextExample,
 )({
+  editor: input,
+})
+```
+
+Most of your call-sites will look like this:
+
+```ts
+const [editor, { triggerKeyboardEvent, type }] = await buildTestHarness(
+  RichTextExample,
+)({
+  editor: input,
+})
+
+// Or this, same thing except with this you can reuse the first part of the function!
+const richTextHarness = buildTestHarness(RichTextExample)
+
+const [editor, { triggerKeyboardEvent, type }] = await richTextHarness({
   editor: input,
 })
 ```
