@@ -123,6 +123,42 @@ import 'slate-test-utils/mocks'
 require('slate-test-utils/mocks')
 ```
 
+## Usage
+
+For this to work, your RichTextEditor component has to accept two props:
+
+- `editor`: This is an editor singleton that the test harness creates and passed into your editor. It's what the hyperscript creates for you.
+- `initialValue`: This is the `editor.children` from the editor singleton.
+
+Your editor call-site will look something like this to make it test friendly:
+
+```tsx
+const emptyEditor: Descendant[] = [
+  {
+    type: 'paragraph',
+    children: [{ text: '' }],
+  },
+]
+
+export const RichTextExample: FC<{
+  editor?: Editor
+  initialValue?: Descendant[]
+  variant?: 'comment' | 'wordProcessor'
+}> = ({
+  editor: mockEditor,
+  variant = 'wordProcessor',
+  initialValue = emptyEditor,
+}) => {
+  // Starts with a default value same as usual except now we can stage
+  // in one for our testing.
+  const [value, setValue] = useState<Descendant[]>(initialValue)
+  const editor = useMemo(
+    // Creates an empty editor if we don't pass a mock one in
+    () => withHistory(withReact(mockEditor ?? createEditor())),
+    [],
+  )
+```
+
 ## Testing ContentEditable in JSDOM?
 
 It's well documented that [JSDOM does not support](https://github.com/jsdom/jsdom/issues/1670) `contenteditable`, the API that Slate is built on top of. JSDOM is a mocked DOM that you run your tests again when using Jest. However, since Slate has done
@@ -151,6 +187,10 @@ There is a lot to support with Slate. I'm not sure if these will work or not bec
 
 - If you get an error about `DataTransfer` not being defined then you haven't imported the `slate-test-utils` mock correctly
 - If you get an error about your patch file make sure your versions are consistent with the `/example` file or create a patch specific to that version
+
+## FAQ
+
+- Could I use this with Prosemirror? I suppose you could depending on how they handle their events under the hood.
 
 ## TODO
 
