@@ -1,9 +1,9 @@
 /** @jsx jsx */
 
+import { jsx } from '../test-utils'
 import { Editor } from 'slate'
-import { assertOutput, renderEditor, testRunner } from '../../dist'
-import { RichTextExample } from './Editor'
-import { jsx } from './test-utils'
+import { assertOutput, buildTestHarness, testRunner } from '../../../dist'
+import { RichTextExample } from '../Editor'
 
 const testCases = () => {
   it('user types into an empty editor', async () => {
@@ -17,7 +17,7 @@ const testCases = () => {
       </editor>
     )
 
-    const [editor, { type }] = await renderEditor(RichTextExample)({
+    const [editor, { type }] = await buildTestHarness(RichTextExample)({
       editor: input,
     })
 
@@ -49,7 +49,9 @@ const testCases = () => {
       </editor>
     )
 
-    const [editor, { type, pressEnter }] = await renderEditor(RichTextExample)({
+    const [editor, { type, pressEnter }] = await buildTestHarness(
+      RichTextExample,
+    )({
       editor: input,
     })
 
@@ -106,7 +108,7 @@ const testCases = () => {
       </editor>
     )
 
-    const [editor, { type }] = await renderEditor(RichTextExample)({
+    const [editor, { type }] = await buildTestHarness(RichTextExample)({
       editor: input,
     })
 

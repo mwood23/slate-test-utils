@@ -1,8 +1,8 @@
 /** @jsx jsx */
 
-import { assertOutput, renderEditor } from '../../dist'
-import { RichTextExample } from './Editor'
-import { jsx } from './test-utils'
+import { assertOutput, buildTestHarness } from '../../../dist'
+import { RichTextExample } from '../Editor'
+import { jsx } from '../test-utils'
 
 it('user types, presses undo, presses redo, and types more', async () => {
   const input = (
@@ -15,7 +15,9 @@ it('user types, presses undo, presses redo, and types more', async () => {
     </editor>
   )
 
-  const [editor, { type, undo, redo }] = await renderEditor(RichTextExample)({
+  const [editor, { type, undo, redo }] = await buildTestHarness(
+    RichTextExample,
+  )({
     editor: input,
   })
 

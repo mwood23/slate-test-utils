@@ -1,8 +1,8 @@
 /** @jsx jsx */
 
-import { assertOutput, renderEditor } from '../../dist'
-import { RichTextExample } from './Editor'
-import { jsx } from './test-utils'
+import { assertOutput, buildTestHarness } from '../../../dist'
+import { RichTextExample } from '../Editor'
+import { jsx } from '../test-utils'
 import { fireEvent } from '@testing-library/dom'
 
 it('user triggers bold hotkey and types with a collapsed selection', async () => {
@@ -17,7 +17,7 @@ it('user triggers bold hotkey and types with a collapsed selection', async () =>
     </editor>
   )
 
-  const [editor, { triggerKeyboardEvent, type }] = await renderEditor(
+  const [editor, { triggerKeyboardEvent, type }] = await buildTestHarness(
     RichTextExample,
   )({
     editor: input,
@@ -55,7 +55,7 @@ it('user triggers bold hotkey with an expanded selection and types', async () =>
     </editor>
   )
 
-  const [editor, { triggerKeyboardEvent, type }] = await renderEditor(
+  const [editor, { triggerKeyboardEvent, type }] = await buildTestHarness(
     RichTextExample,
   )({
     editor: input,
@@ -94,7 +94,7 @@ it('user triggers bold over a selection with italic applied', async () => {
     </editor>
   )
 
-  const [editor, { triggerKeyboardEvent, type }] = await renderEditor(
+  const [editor, { triggerKeyboardEvent, type }] = await buildTestHarness(
     RichTextExample,
   )({
     editor: input,
@@ -133,7 +133,7 @@ it('user triggers bold over a reversed selection with italic applied', async () 
     </editor>
   )
 
-  const [editor, { triggerKeyboardEvent, type }] = await renderEditor(
+  const [editor, { triggerKeyboardEvent, type }] = await buildTestHarness(
     RichTextExample,
   )({
     editor: input,
@@ -169,7 +169,7 @@ it('user clicks bold toolbar button with a collapsed selection and types', async
     </editor>
   )
 
-  const [editor, { type }, { getByTestId }] = await renderEditor(
+  const [editor, { type }, { getByTestId }] = await buildTestHarness(
     RichTextExample,
   )({
     editor: input,
@@ -211,7 +211,7 @@ it('user clicks bold, italic, and underline buttons and types', async () => {
     </editor>
   )
 
-  const [editor, { type }, { getByTestId }] = await renderEditor(
+  const [editor, { type }, { getByTestId }] = await buildTestHarness(
     RichTextExample,
   )({
     editor: input,

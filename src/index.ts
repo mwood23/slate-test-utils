@@ -1,4 +1,4 @@
-export * from './testHarness'
+export * from './buildTestHarness'
 export * from './editorQueries'
 export * from './utils'
 export * from './ensureSlateValid'

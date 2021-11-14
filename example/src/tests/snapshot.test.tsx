@@ -1,8 +1,8 @@
 /** @jsx jsx */
 
-import { assertOutput, renderEditor } from '../../dist'
-import { RichTextExample } from './Editor'
-import { jsx } from './test-utils'
+import { assertOutput, buildTestHarness } from '../../../dist'
+import { RichTextExample } from '../Editor'
+import { jsx } from '../test-utils'
 import { fireEvent } from '@testing-library/dom'
 
 it('snapshot = user triggers bold hotkey and types with a collapsed selection', async () => {
@@ -17,11 +17,10 @@ it('snapshot = user triggers bold hotkey and types with a collapsed selection', 
     </editor>
   )
 
-  const [, { triggerKeyboardEvent, type }, { container }] = await renderEditor(
-    RichTextExample,
-  )({
-    editor: input,
-  })
+  const [, { triggerKeyboardEvent, type }, { container }] =
+    await buildTestHarness(RichTextExample)({
+      editor: input,
+    })
 
   await triggerKeyboardEvent('mod+b')
   await type(' cucumbers')

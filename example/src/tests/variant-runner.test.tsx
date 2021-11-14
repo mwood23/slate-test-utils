@@ -1,9 +1,9 @@
 /** @jsx jsx */
 
 import { Editor } from 'slate'
-import { renderEditor, testRunner } from '../../dist'
-import { RichTextExample } from './Editor'
-import { jsx } from './test-utils'
+import { buildTestHarness, testRunner } from '../../../dist'
+import { RichTextExample } from '../Editor'
+import { jsx } from '../test-utils'
 
 /**
  * This shows OS specific tests for the editor. This is useful if you have logic that's specific
@@ -21,7 +21,7 @@ const testCases = (variant?: 'comment' | 'wordProcessor') => {
       </editor>
     )
 
-    const [editor, { type }, { getByTestId }] = await renderEditor(
+    const [editor, { type }, { getByTestId }] = await buildTestHarness(
       RichTextExample,
     )({
       editor: input,

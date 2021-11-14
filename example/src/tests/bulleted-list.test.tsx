@@ -1,8 +1,8 @@
 /** @jsx jsx */
 
-import { assertOutput, renderEditor } from '../../dist'
-import { RichTextExample } from './Editor'
-import { jsx } from './test-utils'
+import { assertOutput, buildTestHarness } from '../../../dist'
+import { RichTextExample } from '../Editor'
+import { jsx } from '../test-utils'
 import { fireEvent } from '@testing-library/dom'
 
 it('user inserts an bulleted list with a few items', async () => {
@@ -20,7 +20,7 @@ it('user inserts an bulleted list with a few items', async () => {
     editor,
     { type, pressEnter, deleteBackward, triggerKeyboardEvent },
     { getByTestId },
-  ] = await renderEditor(RichTextExample)({
+  ] = await buildTestHarness(RichTextExample)({
     editor: input,
   })
 

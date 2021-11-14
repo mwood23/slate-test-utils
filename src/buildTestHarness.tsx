@@ -44,7 +44,7 @@ export type RenderEditorReturnTuple = [
  * In most cases, you'll want to assert directly on the editor state to check that the editor
  * selection and other pieces of the editor are working as intended.
  */
-export const renderEditor =
+export const buildTestHarness =
   (Component: ComponentType<any>) =>
   async ({
     debug = false,

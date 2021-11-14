@@ -1,3 +1,5 @@
+![](/static/testResults.png)
+
 ## Slate Test Utils
 
 A toolkit to test Slate rich text editors with Jest, React Testing Library, and hyperscript! Write user driven integration tests with ease.
@@ -21,7 +23,7 @@ To see full examples go to `example/`.
 ```tsx
 /** @jsx jsx */
 
-import { assertOutput, renderEditor } from '../../dist'
+import { assertOutput, buildTestHarness } from '../../dist'
 import { RichTextExample } from './Editor'
 import { jsx } from './test-utils'
 import { fireEvent } from '@testing-library/dom'
@@ -41,7 +43,7 @@ it('user inserts an bulleted list with a few items', async () => {
     editor,
     { type, pressEnter, deleteBackward, triggerKeyboardEvent },
     { getByTestId },
-  ] = await renderEditor(RichTextExample)({
+  ] = await buildTestHarness(RichTextExample)({
     editor: input,
   })
 
@@ -73,15 +75,24 @@ it('user inserts an bulleted list with a few items', async () => {
 
 **Rich text editors are hard.** What makes them harder is being able to test them in a way the gives you confidence that your code works as expected. There's so many user input mechanisms, edge cases, selection, state, normalization, and more to keep in mind when developing.
 
-You could do an end to end testing framework, but even those aren't [without struggles](https://github.com/ianstormtaylor/slate/issues/3476#issuecomment-617594068), not to mention they're slow and another piece of infrastructure to worry about. Additionally, mocking up every what if scenario becomes difficult because generating the test states become difficult.
+You could do an end to end testing framework, but even those aren't [without struggles](https://github.com/ianstormtaylor/slate/issues/3476#issuecomment-617594068), not to mention they're slow and another piece of infrastructure to worry about. Additionally, mocking up every what if scenario becomes difficult because generating the test states takes time.
 
-After trying, E2E tests, no tests (don't recommend 😅), and unit tests like [Slate core](https://github.com/ianstormtaylor/slate/tree/main/packages/slate/test) nothing seemed to give me enough confidence and convenience to be able to write a thorough test suite on the code.
+After trying, E2E tests, no tests (don't recommend 😅), and unit tests like [Slate core](https://github.com/ianstormtaylor/slate/tree/main/packages/slate/test) nothing seemed to give me enough confidence and convenience that my was working as intended.
 
-This is where the Slate Test Utils come in! It's an abstraction that uses hyperscript to generate editor states that be tested in a JSDOM environment with a bit of black magic.
+This is where the Slate Test Utils come in! It's an abstraction that uses hyperscript to generate editor states that can be tested in a JSDOM environment with a bit of black magic.
+
+My hope is that by providing a better way to test, everyone can deliver better editor experiences. I also hope that this helps get Slate-React to a stable 1.0 by providing a way to test it internally.
+
+### Testing ContentEditable in JSDOM?
+
+It's well documented that [JSDOM does not support](https://github.com/jsdom/jsdom/issues/1670) `contenteditable`, the API that Slate is built on top of. JSDOM is a mocked DOM that you run your tests again when using Jest. However, since Slate has done
+an amazing job saving us from the darkness of working with `contenteditable` directly there's an opportunity to test a large part of the internal Slate-React API and in turn, our code.
+
+That opportunity is what this library takes advantage of. There's some **big limitations** with this testing approach, but I would estimate that it has covered over 90% of my testing needs and has completely changed how I write Slate code.
 
 ## Installation
 
-The installation to make this work in your environment is going to be a bear, I apologize in advance. Test environments are always difficult to setup.
+The installation to make this work in your environment is going to be a 🐻 bear, I apologize in advance. Test environments are always difficult to setup.
 
 ### Prerequisites
 
@@ -123,7 +134,61 @@ import 'slate-test-utils/mocks'
 require('slate-test-utils/mocks')
 ```
 
-## Usage
+### Configuring Your Hyperscript
+
+The schemaless core of Slate is truly amazing and is fully supported with slate-test-utils. Since we cannot know what your editor's structure is like you need to configure your own hyperscript. Create a file called `testUtils` or `slateTestUtils` and fill out what your document looks like.
+
+```tsx
+// @ts-ignore - Imports will be there from the upstream patch
+import { createHyperscript, createText } from 'slate-hyperscript'
+/**
+ * This is the mapping for the JSX that creates editor state. Add to it as needed.
+ * The h prefix isn't needed. It's added to be consistent and to let us know it's
+ * hyperscript.
+ */
+export const jsx = createHyperscript({
+  elements: {
+    // Add any nodes here with any attributes that's required or optional
+    hp: { type: 'paragraph' },
+    hbulletedlist: { type: 'bulleted-list' },
+    hlistitem: { type: 'list-item' },
+    inline: { inline: true },
+    block: {},
+    wrapper: {},
+  },
+  creators: {
+    htext: createText,
+  },
+})
+```
+
+#### Typescript
+
+If you are using TypeScript you need to let the compiler know about your custom JSX types. Within your `/src` directory add a `hyperscript.d.ts` file.
+
+```ts
+declare namespace JSX {
+  interface Element {}
+  interface IntrinsicElements {
+    hp: any
+    editor: any
+    htext: {
+      // These optional params will show up in the autocomplete!
+      bold?: boolean
+      underline?: boolean
+      italic?: boolean
+      children?: any
+    }
+    hbulletedlist: any
+    hlistitem: any
+    cursor: any
+    focus: any
+    anchor: any
+  }
+}
+```
+
+### Making your Editor Test Friendly
 
 For this to work, your RichTextEditor component has to accept two props:
 
@@ -157,12 +222,143 @@ export const RichTextExample: FC<{
   )
 ```
 
-## Testing ContentEditable in JSDOM?
+Last step, you need to add a `data-testid` to your `Editable` component.
 
-It's well documented that [JSDOM does not support](https://github.com/jsdom/jsdom/issues/1670) `contenteditable`, the API that Slate is built on top of. JSDOM is a mocked DOM that you run your tests again when using Jest. However, since Slate has done
-an amazing job saving us from the toils of working with `contenteditable` directly there's an opportunity to test a large part of the internal Slate-React API and in turn, our code.
+```tsx
+  <Editable
+    data-testid="slate-content-editable"
+```
 
-That opportunity is what this library takes advantage of. There's some **big limitations** with this testing approach, but I would estimate that it has covered over 90% of my testing needs and has completely changed how I write Slate code.
+## Testing
+
+With your editor configured you should be good to go! Check out `/example` for a bunch of tests and patterns.
+
+For all tests make sure you add this to the top:
+
+```ts
+/** @jsx jsx */
+
+import { jsx } from '../test-utils'
+```
+
+The first line sets the pragma that will parse your hyperscript. The second line will import the pragma.
+
+## API
+
+The test utils export a few methods that help you create user centric tests for your editor.
+
+### BuiltTestHarness
+
+A test harness for the RichTextEditor that adds custom queries to assert on, lots of simulated actions, and a custom rerender in case you want to assert on the DOM. In most cases, you'll want to assert directly on the editor state to check that the editor selection and other pieces of the editor are working as intended.
+
+Your first invocation of the test harness needs to be a React component.
+
+```ts
+const richTextHarness = buildTestHarness(RichTextExample)
+```
+
+> Tip! You can partially apply the `buildTestHarness` function to create a bunch of test harnesses per
+> variant of your editor.
+
+Next, you need to pass in the config to render that component. You must pass an `editor` anything else is optional. You are returned a tuple of props. The first is going to be the editor you passed into the harness. The second is going to be commands for testing. The third is custom queries for asserting and the bag of props from `render` in React Testing Library.
+
+#### Config
+
+Use these properties to customize the testHarness
+
+```ts
+/**
+ * A Slate editor singleton.
+ */
+editor: any
+/**
+ * Pretty logs out all operations on the editor so you can see what's going on in tests.
+ */
+debug?: boolean
+/**
+ * Ensures Slate content is valid before rendering. This is not turned on by default
+ * because you may want to test invalid states for normalization or testing purposes.
+ *
+ * @default false
+ */
+strict?: boolean
+/**
+ * Props you would like to pass down to the element you have passed in to test. This could be disabled states
+ * variants, specific styles, or anything else!
+ */
+componentProps?: any
+
+/**
+ * The test ID for the Editable component that is used
+ * to run the test harness.
+ *
+ * @default 'slate-content-editable'
+ */
+testID?: string
+```
+
+```ts
+const [editor, { triggerKeyboardEvent, type }] = await buildTestHarness(
+  RichTextExample,
+)({
+  editor: input,
+})
+```
+
+#### Commands
+
+These commands are what you can use to interact with your rendered editor
+
+```ts
+type: (s: string) => Promise<void>
+deleteForward: () => Promise<void>
+deleteBackward: () => Promise<void>
+deleteEntireSoftline: () => Promise<void>
+deleteHardLineBackward: () => Promise<void>
+deleteSoftLineBackward: () => Promise<void>
+deleteHardLineForward: () => Promise<void>
+deleteSoftLineForward: () => Promise<void>
+deleteWordBackward: () => Promise<void>
+deleteWordForward: () => Promise<void>
+pressEnter: () => Promise<void>
+/**
+ * Use a hotkey combination from is-hotkey. See testHarness internals
+ * for usage.
+ */
+triggerKeyboardEvent: (hotkey: string) => Promise<void>
+typeSpace: () => Promise<void>
+undo: () => Promise<void>
+redo: () => Promise<void>
+selectAll: () => Promise<void>
+isApple: () => boolean
+rerender: () => void
+```
+
+#### Queries
+
+The third param is the bag of props returned from `render`. It includes some helper queries for Slate and all of the default methods returned from React Testing Library.
+
+## Test Runner
+
+The test runner will run your tests simulated in iOS and Windows environments by mocking the user agent. This is useful for testing keyboard events and other OS specific functionality. Refer to `example/src/tests/mac-windows.test.tsx` for usage.
+
+## Running Example Folder
+
+Run the example project to see it in action and get an idea of some fun patterns you can include in your testing.
+
+```sh
+git clone https://github.com/mwood23/slate-test-utils
+
+cd slate-test-utils
+
+yarn install && yarn build
+
+cd example
+
+yarn install
+
+yarn test
+```
 
 ## Limitations
 
@@ -185,11 +381,18 @@ There is a lot to support with Slate. I'm not sure if these will work or not bec
 
 - If you get an error about `DataTransfer` not being defined then you haven't imported the `slate-test-utils` mock correctly
 - If you get an error about your patch file make sure your versions are consistent with the `/example` file or create a patch specific to that version
+- If your editor does not appear to be updating from your tests make sure you have made your editor test friendly
+- If you get an error in your test about your hyperscript not being correct or un-parsable make sure you are importing the pragma and your built hyperscript
 
 ## FAQ
 
-- Could I use this with Prosemirror? I suppose you could depending on how they handle their events under the hood.
+- Could I use this with ProseMirror? I suppose you could depending on how they handle their events under the hood.
 
 ## TODO
 
-PR the patches to the respective repos, especially the Slate ones.
+- PR the patches to the respective repos, especially the Slate ones.
+- Write tests in Slate-React using the test utils?
+
+## Contributing
+
+Any and all PRs, issues, and ideas for improvement welcomes!

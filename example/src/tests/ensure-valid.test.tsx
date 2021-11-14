@@ -1,7 +1,7 @@
 /** @jsx jsx */
 
-import { ensureSlateStateValid } from '../../dist'
-import { jsx } from './test-utils'
+import { ensureSlateStateValid } from '../../../dist'
+import { jsx } from '../test-utils'
 
 /**
  * This helper makes sure that your hyperscript is valid Slate before rendering! If
