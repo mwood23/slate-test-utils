@@ -6,6 +6,37 @@ import { parseHotkey } from 'is-hotkey'
 import { isApple } from './utils'
 import { Editor, Transforms } from 'slate'
 import { ComponentType } from 'react'
+import { HistoryEditor } from 'slate-history'
+import { ensureSlateStateValid } from './ensureSlateValid'
+
+export type RenderEditorReturnTuple = [
+  editor: Editor,
+  commands: {
+    type: (s: string) => Promise<void>
+    deleteForward: () => Promise<void>
+    deleteBackward: () => Promise<void>
+    deleteEntireSoftline: () => Promise<void>
+    deleteHardLineBackward: () => Promise<void>
+    deleteSoftLineBackward: () => Promise<void>
+    deleteHardLineForward: () => Promise<void>
+    deleteSoftLineForward: () => Promise<void>
+    deleteWordBackward: () => Promise<void>
+    deleteWordForward: () => Promise<void>
+    pressEnter: () => Promise<void>
+    /**
+     * Use a hotkey combination from is-hotkey. See testHarness internals
+     * for usage.
+     */
+    triggerKeyboardEvent: (hotkey: string) => Promise<void>
+    typeSpace: () => Promise<void>
+    undo: () => Promise<void>
+    redo: () => Promise<void>
+    selectAll: () => Promise<void>
+    isApple: () => boolean
+    rerender: () => void
+  },
+  options: ReturnType<typeof render>,
+]
 
 /**
  * A test harness for the RichTextEditor that adds custom queries to assert on, lots
@@ -15,21 +46,64 @@ import { ComponentType } from 'react'
  */
 export const renderEditor =
   (Component: ComponentType<any>) =>
-  async ({ debug = false, editor }: { debug: boolean; editor: Editor }) => {
-    const options = render(<Component editor={editor} />, {
-      queries: { ...queries, ...editorQueries },
-    })
+  async ({
+    debug = false,
+    strict = false,
+    editor,
+    componentProps = {},
+    testID = 'slate-content-editable',
+  }: {
+    /**
+     * A Slate editor singleton.
+     */
+    editor: any
+    /**
+     * Pretty logs out all operations on the editor so you can see what's going on in tests.
+     */
+    debug?: boolean
+    /**
+     * Ensures Slate content is valid before rendering. This is not turned on by default
+     * because you may want to test invalid states for normalization or testing purposes.
+     *
+     * @default false
+     */
+    strict?: boolean
+    /**
+     * Props you would like to pass down to the element you have passed in to test. This could be disabled states
+     * variants, specific styles, or anything else!
+     */
+    componentProps?: any
+
+    /**
+     * The test ID for the Editable component that is used
+     * to run the test harness.
+     *
+     * @default 'slate-content-editable'
+     */
+    testID?: string
+  }): Promise<RenderEditorReturnTuple> => {
+    const proppies: any = {
+      editor,
+      initialValue: editor.children,
+      ...componentProps,
+    }
+
+    if (strict) {
+      ensureSlateStateValid(editor)
+    }
+
+    const options = render(
+      <Component initialValue={editor.children} {...proppies} />,
+      {
+        queries: { ...queries, ...editorQueries },
+        // TODO: Rest of options...
+      },
+    )
 
     // @ts-ignore
     await act(async () => options)
 
-    const { apply } = editor
-    editor.apply = (args) => {
-      console.log('apply', args)
-      return apply(args)
-    }
-
-    const element = options.getByTestId('slate-content-editable')
+    const element = options.getByTestId(testID)
 
     /**
      * Manually add this because JSDom doesn't implement this and Slate checks for it
@@ -66,12 +140,12 @@ export const renderEditor =
         )
       })
 
-    const typeSpace = () => type(' ')
+    const typeSpace = async () => type(' ')
 
     /**
      * Deletes forward one character from the current Slate selection.
      */
-    const deleteForward = () =>
+    const deleteForward = async () =>
       act(async () => {
         fireEvent(
           element,
@@ -82,7 +156,7 @@ export const renderEditor =
     /**
      * Deletes backward one character from the current Slate selection.
      */
-    const deleteBackward = () =>
+    const deleteBackward = async () =>
       act(async () => {
         fireEvent(
           element,
@@ -93,7 +167,7 @@ export const renderEditor =
     /**
      * Deletes the entire soft line in Slate backwards and forwards from current Slate selection.
      */
-    const deleteEntireSoftline = () =>
+    const deleteEntireSoftline = async () =>
       act(async () => {
         fireEvent(
           element,
@@ -104,7 +178,7 @@ export const renderEditor =
     /**
      * Deletes the entire block content backwards from current Slate selection.
      */
-    const deleteHardLineBackward = () =>
+    const deleteHardLineBackward = async () =>
       act(async () => {
         fireEvent(
           element,
@@ -117,7 +191,7 @@ export const renderEditor =
     /**
      * Deletes the entire block content backwards from current Slate selection.
      */
-    const deleteSoftLineBackward = () =>
+    const deleteSoftLineBackward = async () =>
       act(async () => {
         fireEvent(
           element,
@@ -131,7 +205,7 @@ export const renderEditor =
      * Deletes the entire block content forwards from current Slate selection.
      */
 
-    const deleteHardLineForward = () =>
+    const deleteHardLineForward = async () =>
       act(async () => {
         fireEvent(
           element,
@@ -142,8 +216,7 @@ export const renderEditor =
     /**
      * Deletes the entire block content forwards from current Slate selection.
      */
-
-    const deleteSoftLineForward = () =>
+    const deleteSoftLineForward = async () =>
       act(async () => {
         fireEvent(
           element,
@@ -154,7 +227,7 @@ export const renderEditor =
     /**
      * Deletes a word backwards from Slate's selection
      */
-    const deleteWordBackward = () =>
+    const deleteWordBackward = async () =>
       act(async () => {
         fireEvent(
           element,
@@ -165,7 +238,7 @@ export const renderEditor =
     /**
      * Deletes a word forward from Slate's selection
      */
-    const deleteWordForward = () =>
+    const deleteWordForward = async () =>
       act(async () => {
         fireEvent(
           element,
@@ -176,7 +249,7 @@ export const renderEditor =
     /**
      * Inserts a line break at the current selection. Simulates pressing 'Enter' in a contenteditable with Slate.
      */
-    const pressEnter = () =>
+    const pressEnter = async () =>
       act(async () => {
         fireEvent(
           element,
@@ -187,55 +260,31 @@ export const renderEditor =
     /**
      * Simulates the user pressing a key down. This is commonly used for testing hotkeys.
      */
-    const triggerKeyboardEvent = (hotkey: string) =>
+    const triggerKeyboardEvent = async (hotkey: string) =>
       act(async () => {
         const eventProps = parseHotkey(hotkey)
         const values = hotkey.split('+')
 
         fireEvent(
           element,
-          new KeyboardEvent('keydown', {
+          new window.KeyboardEvent('keydown', {
             key: values[values.length - 1],
             code: `${eventProps.which}`,
             keyCode: eventProps.which,
-            // altKey: false,
-            // ctrlKey: false,
-            // metaKey: false,
-            // shiftKey: false,
             bubbles: true,
             ...eventProps,
           }),
         )
       })
 
-    /**
-     * List of hotkeys we're emulating for Slate React:
-     * https://github.com/ianstormtaylor/slate/blob/a5f4170162cefd1c9458544402bb8f2266e05ead/packages/slate-react/src/utils/hotkeys.ts#L8
-     *
-     * NOTE: Moving up/down or other composition events are not supported because of limitations in JSDom I haven't figured out.
-     *
-     * For help figuring out keys: https://keycode.info/
-     */
-    const moveBackward = () => triggerKeyboardEvent('left')
-    const moveForward = () => triggerKeyboardEvent('right')
-    const moveWordBackward = () => triggerKeyboardEvent('ctrl+left')
-    const moveWordForward = () => triggerKeyboardEvent('ctrl+right')
-    // const undo = () => triggerKeyboardEvent(getUndoHotkey());
-    // const redo = () => triggerKeyboardEvent(getRedoHotkey());
-    const tabForward = () => triggerKeyboardEvent('tab')
-    const tabBackward = () => triggerKeyboardEvent('shift+tab')
+    const undo = async () => (editor as HistoryEditor).undo()
+    const redo = async () => (editor as HistoryEditor).redo()
     // Keyboard shortcut wouldn't work within JSDOM so we emulate it
-    const selectAll = () => Transforms.select(editor, [])
-    const backspaceKeyPress = () => triggerKeyboardEvent('backspace')
-    const deleteKeyPress = () => triggerKeyboardEvent('delete')
-
-    const gamepadPressPrevious = () => triggerKeyboardEvent('ctrl+1')
-    const gamepadPressRecord = () => triggerKeyboardEvent('ctrl+2')
-    const gamepadPressNext = () => triggerKeyboardEvent('ctrl+3')
+    const selectAll = async () => Transforms.select(editor, [])
 
     if (debug) {
       const { apply } = editor
-      editor.apply = (args) => {
+      editor.apply = (args: any) => {
         // eslint-disable-next-line no-console
         console.log('OPERATION APPLIED', JSON.stringify(args, null, 2))
         return apply(args)
@@ -256,24 +305,13 @@ export const renderEditor =
         deleteWordBackward,
         deleteWordForward,
         triggerKeyboardEvent,
-        moveForward,
-        moveBackward,
-        moveWordBackward,
-        moveWordForward,
         pressEnter,
         typeSpace,
-        // undo,
-        // redo,
-        tabForward,
-        tabBackward,
+        undo,
+        redo,
         selectAll,
-        backspaceKeyPress,
-        deleteKeyPress,
-        gamepadPressNext,
-        gamepadPressRecord,
-        gamepadPressPrevious,
         isApple,
-        rerender: () => options.rerender(<Component editor={editor} />),
+        rerender: () => options.rerender(<Component {...proppies} />),
       },
       options,
     ]

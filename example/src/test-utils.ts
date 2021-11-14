@@ -8,6 +8,8 @@ import { createHyperscript, createText } from 'slate-hyperscript'
 export const jsx = createHyperscript({
   elements: {
     hp: { type: 'paragraph' },
+    hbulletedlist: { type: 'bulleted-list' },
+    hlistitem: { type: 'list-item' },
     inline: { inline: true },
     block: {},
     wrapper: {},

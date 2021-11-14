@@ -1,11 +1,17 @@
 {
   "cSpell.words": [
     "beforeinput",
+    "clonedeep",
     "flowtype",
+    "hbulletedlist",
+    "hlistitem",
     "htext",
     "hyperscript",
     "preact",
+    "proppies",
     "rerender",
-    "softline"
+    "softline",
+    "unskip",
+    "vite"
   ]
 }

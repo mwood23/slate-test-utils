@@ -1,2 +1,5 @@
 export * from './testHarness'
 export * from './editorQueries'
+export * from './utils'
+export * from './ensureSlateValid'
+export * from './testRunner'

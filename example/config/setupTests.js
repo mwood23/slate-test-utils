@@ -1,2 +1,2 @@
 import '@testing-library/jest-dom'
-window.DataTransfer = class DataTransfer {}
+import '../../dist/mocks'

@@ -30,9 +30,14 @@ const emptyEditor: Descendant[] = [
 ]
 
 export const RichTextExample: FC<{
-  editor: Editor
-  initialValue: Descendant[]
-}> = ({ editor: mockEditor, initialValue = emptyEditor }) => {
+  editor?: Editor
+  initialValue?: Descendant[]
+  variant?: 'comment' | 'wordProcessor'
+}> = ({
+  editor: mockEditor,
+  variant = 'wordProcessor',
+  initialValue = emptyEditor,
+}) => {
   const [value, setValue] = useState<Descendant[]>(initialValue)
   const renderElement = useCallback((props) => <Element {...props} />, [])
   const renderLeaf = useCallback((props) => <Leaf {...props} />, [])
@@ -48,13 +53,18 @@ export const RichTextExample: FC<{
         <MarkButton format="italic" icon="format_italic" />
         <MarkButton format="underline" icon="format_underlined" />
         <MarkButton format="code" icon="code" />
-        <BlockButton format="heading-one" icon="looks_one" />
-        <BlockButton format="heading-two" icon="looks_two" />
-        <BlockButton format="block-quote" icon="format_quote" />
-        <BlockButton format="numbered-list" icon="format_list_numbered" />
-        <BlockButton format="bulleted-list" icon="format_list_bulleted" />
+        {variant === 'wordProcessor' && (
+          <>
+            <BlockButton format="heading-one" icon="looks_one" />
+            <BlockButton format="heading-two" icon="looks_two" />
+            <BlockButton format="block-quote" icon="format_quote" />
+            <BlockButton format="numbered-list" icon="format_list_numbered" />
+            <BlockButton format="bulleted-list" icon="format_list_bulleted" />
+          </>
+        )}
       </Toolbar>
       <Editable
+        data-variant={variant}
         data-testid="slate-content-editable"
         renderElement={renderElement}
         renderLeaf={renderLeaf}
@@ -171,7 +181,9 @@ const BlockButton: FC<any> = ({ format, icon }) => {
   const editor = useSlate()
   return (
     <Button
+      data-testid={format}
       active={isBlockActive(editor, format)}
+      data-active={isBlockActive(editor, format)}
       onMouseDown={(event: any) => {
         event.preventDefault()
         toggleBlock(editor, format)
@@ -186,6 +198,8 @@ const MarkButton: FC<any> = ({ format, icon }) => {
   const editor = useSlate()
   return (
     <Button
+      data-testid={format}
+      data-active={isMarkActive(editor, format)}
       active={isMarkActive(editor, format)}
       onMouseDown={(event: any) => {
         event.preventDefault()
