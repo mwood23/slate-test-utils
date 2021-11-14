@@ -1,5 +1,3 @@
-![](/static/testResults.png)
-
 ## Slate Test Utils
 
 A toolkit to test Slate rich text editors with Jest, React Testing Library, and hyperscript! Write user driven integration tests with ease.
@@ -15,6 +13,10 @@ A toolkit to test Slate rich text editors with Jest, React Testing Library, and 
 - 🦆 Test variants of your editor with the same test
 - 📸 Snapshot testing friendly (if you're into that kinda thing)
 - 👔 Fully typed with TypeScript
+
+Want to learn more about Slate? [Join the newsletter.](https://marcuswood.ck.page/slate)
+
+![](/static/test-results.png)
 
 ### Example
 
@@ -75,7 +77,7 @@ it('user inserts an bulleted list with a few items', async () => {
 
 **Rich text editors are hard.** What makes them harder is being able to test them in a way the gives you confidence that your code works as expected. There's so many user input mechanisms, edge cases, selection, state, normalization, and more to keep in mind when developing.
 
-You could do an end to end testing framework, but even those aren't [without struggles](https://github.com/ianstormtaylor/slate/issues/3476#issuecomment-617594068), not to mention they're slow and another piece of infrastructure to worry about. Additionally, mocking up every what if scenario becomes difficult because generating the test states takes time.
+You could do an end to end testing framework, but even those aren't [without struggles](https://github.com/ianstormtaylor/slate/issues/3476#issuecomment-617594068), not to mention they're slow and another piece of infrastructure to worry about. Additionally, mocking up every what if scenario becomes difficult because generating the test states takes time. Even if you manage to get it all set up, it's hard to see the diff on your breaking tests unlike Jest that has a fantastic reporter for diffing JSON (what Slate state serializes to by default).
 
 After trying, E2E tests, no tests (don't recommend 😅), and unit tests like [Slate core](https://github.com/ianstormtaylor/slate/tree/main/packages/slate/test) nothing seemed to give me enough confidence and convenience that my was working as intended.
 
