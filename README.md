@@ -143,10 +143,8 @@ const emptyEditor: Descendant[] = [
 export const RichTextExample: FC<{
   editor?: Editor
   initialValue?: Descendant[]
-  variant?: 'comment' | 'wordProcessor'
 }> = ({
   editor: mockEditor,
-  variant = 'wordProcessor',
   initialValue = emptyEditor,
 }) => {
   // Starts with a default value same as usual except now we can stage
