@@ -11,6 +11,7 @@
   },
   "peerDependencies": {
     "@testing-library/react": "^12.1.2",
+    "@testing-library/jest-dom": "^5.15.0",
     "react": ">=16.8.0",
     "react-dom": ">=16.8.0",
     "slate": "^0.70.0",

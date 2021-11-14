@@ -16,11 +16,15 @@ it('user inserts an bulleted list with a few items', async () => {
     </editor>
   )
 
-  const [editor, { type, pressEnter, deleteBackward }, { getByTestId }] =
-    await renderEditor(RichTextExample)({
-      editor: input,
-    })
+  const [
+    editor,
+    { type, pressEnter, deleteBackward, triggerKeyboardEvent },
+    { getByTestId },
+  ] = await renderEditor(RichTextExample)({
+    editor: input,
+  })
 
+  // Click the unordered list button in the nav
   const unorderedList = getByTestId('bulleted-list')
   fireEvent.mouseDown(unorderedList)
 
@@ -37,7 +41,9 @@ it('user inserts an bulleted list with a few items', async () => {
     </editor>,
   )
 
-  await type('First item')
+  await type('🥕')
+  await deleteBackward()
+  await type('Carrots')
 
   assertOutput(
     editor,
@@ -45,7 +51,7 @@ it('user inserts an bulleted list with a few items', async () => {
       <hbulletedlist>
         <hlistitem>
           <htext>
-            First item
+            Carrots
             <cursor />
           </htext>
         </hlistitem>
@@ -54,18 +60,19 @@ it('user inserts an bulleted list with a few items', async () => {
   )
 
   await pressEnter()
-  await type('Second item')
+  await triggerKeyboardEvent('mod+b')
+  await type('Apples')
 
   assertOutput(
     editor,
     <editor>
       <hbulletedlist>
         <hlistitem>
-          <htext>First item</htext>
+          <htext>Carrots</htext>
         </hlistitem>
         <hlistitem>
-          <htext>
-            Second item
+          <htext bold>
+            Apples
             <cursor />
           </htext>
         </hlistitem>
@@ -73,22 +80,23 @@ it('user inserts an bulleted list with a few items', async () => {
     </editor>,
   )
 
+  await triggerKeyboardEvent('mod+b')
   await pressEnter()
-  await type('Third item')
+  await type('Cherries')
 
   assertOutput(
     editor,
     <editor>
       <hbulletedlist>
         <hlistitem>
-          <htext>First item</htext>
+          <htext>Carrots</htext>
         </hlistitem>
         <hlistitem>
-          <htext>Second item</htext>
+          <htext bold>Apples</htext>
         </hlistitem>
         <hlistitem>
           <htext>
-            Third item
+            Cherries
             <cursor />
           </htext>
         </hlistitem>
@@ -106,19 +114,17 @@ it('user inserts an bulleted list with a few items', async () => {
   await deleteBackward()
   await deleteBackward()
   await deleteBackward()
-  await deleteBackward()
-  await deleteBackward()
 
   assertOutput(
     editor,
     <editor>
       <hbulletedlist>
         <hlistitem>
-          <htext>First item</htext>
+          <htext>Carrots</htext>
         </hlistitem>
         <hlistitem>
-          <htext>
-            Second item
+          <htext bold>
+            Apples
             <cursor />
           </htext>
         </hlistitem>
