@@ -1,0 +1,18 @@
+diff --git a/node_modules/slate-react/dist/index.js b/node_modules/slate-react/dist/index.js
+index 5ee8b6f..cae9b56 100644
+--- a/node_modules/slate-react/dist/index.js
++++ b/node_modules/slate-react/dist/index.js
+@@ -424,9 +424,10 @@ var IS_QQBROWSER = typeof navigator !== 'undefined' && /.*QQBrowser/.test(naviga
+ var CAN_USE_DOM = !!(typeof window !== 'undefined' && typeof window.document !== 'undefined' && typeof window.document.createElement !== 'undefined'); // COMPAT: Firefox/Edge Legacy don't support the `beforeinput` event
+ // Chrome Legacy doesn't support `beforeinput` correctly
+ 
+-var HAS_BEFORE_INPUT_SUPPORT = !IS_CHROME_LEGACY && !IS_EDGE_LEGACY && // globalThis is undefined in older browsers
+-typeof globalThis !== 'undefined' && globalThis.InputEvent && // @ts-ignore The `getTargetRanges` property isn't recognized.
+-typeof globalThis.InputEvent.prototype.getTargetRanges === 'function';
++var HAS_BEFORE_INPUT_SUPPORT = true
++// !IS_CHROME_LEGACY && !IS_EDGE_LEGACY && // globalThis is undefined in older browsers
++// typeof globalThis !== 'undefined' && globalThis.InputEvent && // @ts-ignore The `getTargetRanges` property isn't recognized.
++// typeof globalThis.InputEvent.prototype.getTargetRanges === 'function';
+ 
+ /**
+  * Prevent warning on SSR by falling back to useEffect when DOM isn't available
