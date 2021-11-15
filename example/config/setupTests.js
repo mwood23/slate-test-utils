@@ -1,2 +1,2 @@
 import '@testing-library/jest-dom'
-import '../../dist/mocks'
+import '../../dist/esm/mocks'

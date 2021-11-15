@@ -1,11 +1,12 @@
 /** @jsx jsx */
 
 import { Editor } from 'slate'
-import { buildTestHarness, testRunner } from '../../../dist'
+import { buildTestHarness, testRunner } from '../../../dist/esm'
 import { RichTextExample } from '../Editor'
 import { jsx } from '../test-utils'
 
 /**
+ * This shows OS specific tests for the editor. This is useful if you have logic that's specific
  * This shows OS specific tests for the editor. This is useful if you have logic that's specific
  * to a certain operating system like keyboard events.
  */
@@ -55,7 +56,7 @@ const testCases = (variant?: 'comment' | 'wordProcessor') => {
 
 const runVariants = () => {
   describe.each([
-    ['Report Mode', 'comment'],
+    ['Comment', 'comment'],
     ['Word Processor', 'wordProcessor'],
     // It's valid, linter just doesn't like it
     // eslint-disable-next-line jest/valid-describe

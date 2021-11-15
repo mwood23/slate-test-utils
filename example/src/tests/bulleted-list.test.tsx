@@ -1,6 +1,6 @@
 /** @jsx jsx */
 
-import { assertOutput, buildTestHarness } from '../../../dist'
+import { assertOutput, buildTestHarness } from '../../../dist/esm'
 import { RichTextExample } from '../Editor'
 import { jsx } from '../test-utils'
 import { fireEvent } from '@testing-library/dom'

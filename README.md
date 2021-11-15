@@ -7,6 +7,7 @@ A toolkit to test Slate rich text editors with Jest, React Testing Library, and 
 - 🐣 Stage editor state using Hyperscript instead of manual mocking or creating a Storybook story per state
 - 🏕 Stage tests with a mocked collapsed, expanded, or reverse expanded selection
 - ✅ Supports any Slate React editor
+- 🎩 Beautiful diffs on failing tests
 - ⚙️ Supports any number of nodes and custom data structures
 - 🌊 Supports emulating Windows and Mac for OS specific testing
 - 💃 Conversational API that makes testing complex workflows easy
@@ -25,7 +26,7 @@ To see full examples go to `example/`.
 ```tsx
 /** @jsx jsx */
 
-import { assertOutput, buildTestHarness } from '../../dist'
+import { assertOutput, buildTestHarness } from '../../dist/esm'
 import { RichTextExample } from './Editor'
 import { jsx } from './test-utils'
 import { fireEvent } from '@testing-library/dom'
@@ -217,11 +218,7 @@ export const RichTextExample: FC<{
   // Starts with a default value same as usual except now we can stage
   // in one for our testing.
   const [value, setValue] = useState<Descendant[]>(initialValue)
-  const editor = useMemo(
-    // Creates an empty editor if we don't pass a mock one in
-    () => withHistory(withReact(mockEditor ?? createEditor())),
-    [],
-  )
+  const editor = useMemo(() => createEditor(), [])
 ```
 
 Last step, you need to add a `data-testid` to your `Editable` component.

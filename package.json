@@ -3,9 +3,12 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "tsc --watch",
-    "build": "tsc",
+    "build": "tsc -p tsconfig.json && tsc -p tsconfig.cjs.json",
     "build:watch": "tsc --watch"
   },
+  "module": "dist/esm",
+  "main": "dist/esm",
+  "types": "./dist/esm/index.d.ts",
   "dependencies": {
     "is-hotkey": "^0.2.0"
   },

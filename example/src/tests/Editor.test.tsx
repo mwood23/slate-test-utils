@@ -2,7 +2,7 @@
 
 import { jsx } from '../test-utils'
 import { Editor } from 'slate'
-import { assertOutput, buildTestHarness, testRunner } from '../../../dist'
+import { assertOutput, buildTestHarness, testRunner } from '../../../dist/esm'
 import { RichTextExample } from '../Editor'
 
 const testCases = () => {
