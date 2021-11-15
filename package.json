@@ -1,6 +1,15 @@
 {
   "name": "slate-test-utils",
-  "version": "1.1.0",
+  "license": "MIT",
+  "repository": "https://github.com/mwood23/slate-test-utils",
+  "author": "Marcus Wood <hi@marcuswood.io>",
+  "homepage": "https://github.com/mwood23/slate-test-utils",
+  "version": "1.1.1",
+  "keywords": [
+    "slate",
+    "slate-react",
+    "slatejs"
+  ],
   "scripts": {
     "dev": "tsc --watch",
     "build": "tsc -p tsconfig.json && tsc -p tsconfig.cjs.json",
