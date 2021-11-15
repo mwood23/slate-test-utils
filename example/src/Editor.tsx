@@ -1,3 +1,8 @@
+/**
+ * EXAMPLE FROM SLATE'S SOURCE:
+ * https://github.com/ianstormtaylor/slate/tree/main/site/examples
+ */
+
 import React, { useCallback, useMemo, useState } from 'react'
 import isHotkey from 'is-hotkey'
 import { Editable, withReact, useSlate, Slate } from 'slate-react'

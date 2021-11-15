@@ -1,3 +1,8 @@
+/**
+ * EXAMPLE FROM SLATE'S SOURCE:
+ * https://github.com/ianstormtaylor/slate/tree/main/site/examples
+ */
+
 import React, { PropsWithChildren } from 'react'
 import ReactDOM from 'react-dom'
 import { cx, css } from 'emotion'
@@ -41,63 +46,6 @@ export const Button = React.forwardRef(
       )}
     />
   ),
-)
-
-export const EditorValue = React.forwardRef(
-  (
-    {
-      className,
-      value,
-      ...props
-    }: PropsWithChildren<
-      {
-        value: any
-      } & BaseProps
-    >,
-    ref: any,
-  ) => {
-    const textLines = value.document.nodes
-      .map((node: any) => node.text)
-      .toArray()
-      .join('\n')
-    return (
-      <div
-        ref={ref}
-        {...props}
-        className={cx(
-          className,
-          css`
-            margin: 30px -20px 0;
-          `,
-        )}
-      >
-        <div
-          className={css`
-            font-size: 14px;
-            padding: 5px 20px;
-            color: #404040;
-            border-top: 2px solid #eeeeee;
-            background: #f8f8f8;
-          `}
-        >
-          Slate's value as text
-        </div>
-        <div
-          className={css`
-            color: #404040;
-            font: 12px monospace;
-            white-space: pre-wrap;
-            padding: 10px 20px;
-            div {
-              margin: 0 0 0.5em;
-            }
-          `}
-        >
-          {textLines}
-        </div>
-      </div>
-    )
-  },
 )
 
 export const Icon = React.forwardRef(
