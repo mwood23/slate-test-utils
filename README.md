@@ -1,5 +1,9 @@
 # Slate Test Utils
 
+
+![Slate test utils wave](https://user-images.githubusercontent.com/13633613/141720758-f6763d89-fddb-468c-af90-14081a145043.mp4)
+_Created with [Wave Snippets](https://wavesnippets.com/)_
+
 A toolkit to test Slate rich text editors with Jest, React Testing Library, and hyperscript! Write user centric integration tests with ease.
 
 - 🚀 Works with Jest, React Testing Library, and JSDOM (Create React App and Vite friendly)
