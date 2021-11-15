@@ -135,11 +135,11 @@ That should apply your patches to your `node_modules`. You may get a warning if 
 Lastly, you need to add this line to your `setupTests.js` file for Jest so we can mock things.
 
 ```js
-import 'slate-test-utils/mocks'
+import 'slate-test-utils/dist/cjs/mocks'
 
 // or if you are in commonjs
 
-require('slate-test-utils/mocks')
+require('slate-test-utils/dist/cjs/mocks')
 ```
 
 ### Configuring Your Hyperscript
