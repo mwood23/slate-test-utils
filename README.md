@@ -5,7 +5,7 @@ https://user-images.githubusercontent.com/13633613/141721067-2c1984ac-d73f-4984-
 
 _Created with [Wave Snippets](https://wavesnippets.com/)_
 
-A toolkit to test Slate rich text editors with Jest, React Testing Library, and hyperscript! Write user centric integration tests with ease.
+A toolkit to test Slate rich text editors with Jest, React Testing Library, and hyperscript! Write user centric integration tests with ease. Read the [announcement](https://www.marcuswood.io/blog/effective-slate-testing-using-react-testing-library).
 
 - 🚀 Works with Jest, React Testing Library, and JSDOM (Create React App and Vite friendly)
 - 🙏 Out of the box support for testing: typing, selection, keyboard events, beforeInput events, normalization, history, operations,
