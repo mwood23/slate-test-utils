@@ -85,7 +85,7 @@ it('user inserts an bulleted list with a few items', async () => {
 
 You could do an end to end testing framework, but even those aren't [without struggles](https://github.com/ianstormtaylor/slate/issues/3476#issuecomment-617594068), not to mention they're slow and another piece of infrastructure to worry about. Additionally, mocking up every what if scenario becomes difficult because generating the test states takes time. Even if you manage to get it all set up, it's hard to see the diff on your breaking tests unlike Jest that has a fantastic reporter for diffing JSON (what Slate state serializes to by default).
 
-After trying, E2E tests, no tests (don't recommend 😅), and unit tests like [Slate core](https://github.com/ianstormtaylor/slate/tree/main/packages/slate/test) nothing seemed to give me enough confidence and convenience that my was working as intended.
+After trying, E2E tests, no tests (don't recommend 😅), and unit tests like [Slate core](https://github.com/ianstormtaylor/slate/tree/main/packages/slate/test) nothing seemed to give me enough confidence and convenience that my was code working as intended.
 
 This is where the Slate Test Utils come in! It's an abstraction that uses hyperscript to generate editor states that can be tested in a JSDOM environment with a bit of black magic.
 
