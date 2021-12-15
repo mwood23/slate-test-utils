@@ -341,7 +341,7 @@ deleteHardLineForward: () => Promise<void>
 deleteSoftLineForward: () => Promise<void>
 deleteWordBackward: () => Promise<void>
 deleteWordForward: () => Promise<void>
-paste: (payload: string, { types: 'text/html' | 'text/plain' | 'image/png'[] }) => Promise<void>
+paste: (payload: string, ?{ types: 'text/html' | 'text/plain' | 'image/png'[] }) => Promise<void>
 pressEnter: () => Promise<void>
 /**
  * Use a hotkey combination from is-hotkey. See testHarness internals
