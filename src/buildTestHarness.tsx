@@ -25,7 +25,7 @@ export type RenderEditorReturnTuple = [
     deleteSoftLineForward: () => Promise<void>
     deleteWordBackward: () => Promise<void>
     deleteWordForward: () => Promise<void>
-    paste: (payload: string, options: PasteOptions) => Promise<void>
+    paste: (payload: string, options?: PasteOptions) => Promise<void>
     pressEnter: () => Promise<void>
     /**
      * Use a hotkey combination from is-hotkey. See testHarness internals
@@ -146,9 +146,12 @@ export const buildTestHarness =
 
     const typeSpace = async () => type(' ')
 
-    const paste = async (payload: string, options: PasteOptions = {}) =>
+    const paste = async (
+      payload: string,
+      options: PasteOptions | undefined = {},
+    ) =>
       act(async () => {
-        const types = options.types ?? ['text/html']
+        const types = options?.types ?? ['text/html']
 
         const event = new window.Event('paste', {
           bubbles: true,
