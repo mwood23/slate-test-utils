@@ -20,7 +20,7 @@
   "types": "./dist/esm/index.d.ts",
   "dependencies": {
     "is-hotkey": "^0.2.0",
-    "jest-useragent-mock": "^0.1.1",
+    "jest-useragent-mock": "^0.1.1"
   },
   "peerDependencies": {
     "@testing-library/jest-dom": "^5.15.0",

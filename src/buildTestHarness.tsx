@@ -251,9 +251,11 @@ export const buildTestHarness =
      */
     const pressEnter = async () =>
       act(async () => {
+        await triggerKeyboardEvent('Enter')
+
         fireEvent(
           element,
-          new InputEvent('beforeinput', { inputType: 'insertLineBreak' }),
+          new InputEvent('beforeinput', { inputType: 'insertParagraph' }),
         )
       })
 

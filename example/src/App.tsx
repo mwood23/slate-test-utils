@@ -8,7 +8,7 @@ function App() {
       <h1>Word Processor</h1>
       <RichTextExample />
       <h1>Comment Mode</h1>
-      <RichTextExample />
+      <RichTextExample variant="comment" />
     </div>
   )
 }
