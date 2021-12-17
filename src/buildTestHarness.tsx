@@ -9,6 +9,9 @@ import { ComponentType } from 'react'
 import { HistoryEditor } from 'slate-history'
 import { ensureSlateStateValid } from './ensureSlateValid'
 
+type ClipboardDataType = 'text/html' | 'text/plain' | 'image/png'
+type PasteOptions = { types?: ClipboardDataType[] }
+
 export type RenderEditorReturnTuple = [
   editor: Editor,
   commands: {
@@ -22,6 +25,7 @@ export type RenderEditorReturnTuple = [
     deleteSoftLineForward: () => Promise<void>
     deleteWordBackward: () => Promise<void>
     deleteWordForward: () => Promise<void>
+    paste: (payload: string, options?: PasteOptions) => Promise<void>
     pressEnter: () => Promise<void>
     /**
      * Use a hotkey combination from is-hotkey. See testHarness internals
@@ -141,6 +145,30 @@ export const buildTestHarness =
       })
 
     const typeSpace = async () => type(' ')
+
+    const paste = async (
+      payload: string,
+      options: PasteOptions | undefined = {},
+    ) =>
+      act(async () => {
+        const types = options?.types ?? ['text/html']
+
+        const event = new window.Event('paste', {
+          bubbles: true,
+          cancelable: true,
+          composed: true,
+        })
+
+        // @ts-ignore Typescript doesn't expect clipboardData on Event type
+        event.clipboardData = {
+          types,
+          getData() {
+            return payload
+          },
+        }
+
+        fireEvent(element, event)
+      })
 
     /**
      * Deletes forward one character from the current Slate selection.
@@ -307,6 +335,7 @@ export const buildTestHarness =
         deleteWordBackward,
         deleteWordForward,
         triggerKeyboardEvent,
+        paste,
         pressEnter,
         typeSpace,
         undo,
