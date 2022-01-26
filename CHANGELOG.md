@@ -5,3 +5,7 @@
 - Add support for paste to the ui
 
 Thanks [@hanford](https://github.com/hanford) and [@gombosg](https://github.com/gombosg)
+
+## 1.2.1
+
+- Update peer dep requirements
