@@ -9,3 +9,11 @@ Thanks [@hanford](https://github.com/hanford) and [@gombosg](https://github.com/
 ## 1.2.1
 
 - Update peer dep requirements
+
+## 1.3.0
+
+- Update lodash.clonedeep to be a dependency instead of dev dependency
+
+## 1.3.1
+
+- Update readme
