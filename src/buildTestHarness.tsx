@@ -13,8 +13,8 @@ type ClipboardDataType = 'text/html' | 'text/plain' | 'image/png'
 type PasteOptions = { types?: ClipboardDataType[] }
 
 export type RenderEditorReturnTuple = [
-  editor: Editor,
-  commands: {
+  Editor,
+  {
     type: (s: string) => Promise<void>
     deleteForward: () => Promise<void>
     deleteBackward: () => Promise<void>
@@ -39,7 +39,7 @@ export type RenderEditorReturnTuple = [
     isApple: () => boolean
     rerender: () => void
   },
-  options: ReturnType<typeof render>,
+  ReturnType<typeof render>,
 ]
 
 /**

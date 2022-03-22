@@ -17,3 +17,7 @@ Thanks [@hanford](https://github.com/hanford) and [@gombosg](https://github.com/
 ## 1.3.1
 
 - Update readme
+
+## 1.3.2
+
+- Type fix for pre 4.0 Typescript
