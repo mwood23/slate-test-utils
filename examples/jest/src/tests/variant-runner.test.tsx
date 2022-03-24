@@ -1,7 +1,7 @@
 /** @jsx jsx */
 
 import { Editor } from 'slate'
-import { buildTestHarness, testRunner } from '../../../dist/esm'
+import { buildTestHarness, testRunner } from '../../../../dist/esm'
 import { RichTextExample } from '../Editor'
 import { jsx } from '../test-utils'
 

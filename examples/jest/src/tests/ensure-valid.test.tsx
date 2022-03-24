@@ -1,6 +1,6 @@
 /** @jsx jsx */
 
-import { ensureSlateStateValid } from '../../../dist/esm'
+import { ensureSlateStateValid } from '../../../../dist/esm'
 import { jsx } from '../test-utils'
 
 /**

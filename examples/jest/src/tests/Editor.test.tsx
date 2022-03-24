@@ -1,9 +1,9 @@
 /** @jsx jsx */
 
-import { jsx } from '../test-utils'
 import { Editor } from 'slate'
-import { assertOutput, buildTestHarness, testRunner } from '../../../dist/esm'
+import { assertOutput, buildTestHarness, testRunner } from '../../../../dist/esm'
 import { RichTextExample } from '../Editor'
+import { jsx } from '../test-utils'
 
 const testCases = () => {
   it('user types into an empty editor', async () => {
