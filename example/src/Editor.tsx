@@ -15,8 +15,10 @@ import {
 } from 'slate'
 import { withHistory } from 'slate-history'
 
-import { Button, Icon, Toolbar } from './Components'
+import { Button, Icon, Toolbar, Image } from './Components'
 import { FC } from 'react'
+import { withImages } from './plugins'
+import { EditableProps } from 'slate-react/dist/components/editable'
 
 const HOTKEYS = {
   'mod+b': 'bold',
@@ -43,52 +45,73 @@ export const RichTextExample: FC<{
   variant = 'wordProcessor',
   initialValue = emptyEditor,
 }) => {
-  const [value, setValue] = useState<Descendant[]>(initialValue)
-  const renderElement = useCallback((props) => <Element {...props} />, [])
-  const renderLeaf = useCallback((props) => <Leaf {...props} />, [])
-  const editor = useMemo(
-    () => withHistory(withReact(mockEditor ?? createEditor())),
-    [],
-  )
+    const [value, setValue] = useState<Descendant[]>(initialValue)
+    const renderElement = useCallback((props) => <Element {...props} />, [])
+    const renderLeaf = useCallback((props) => <Leaf {...props} />, [])
+    const editor = useMemo(
+      () => withImages(withHistory(withReact(mockEditor ?? createEditor()))),
+      [],
+    )
 
-  return (
-    <Slate editor={editor} value={value} onChange={(value) => setValue(value)}>
-      <Toolbar>
-        <MarkButton format="bold" icon="format_bold" />
-        <MarkButton format="italic" icon="format_italic" />
-        <MarkButton format="underline" icon="format_underlined" />
-        <MarkButton format="code" icon="code" />
-        {variant === 'wordProcessor' && (
-          <>
-            <BlockButton format="heading-one" icon="looks_one" />
-            <BlockButton format="heading-two" icon="looks_two" />
-            <BlockButton format="block-quote" icon="format_quote" />
-            <BlockButton format="numbered-list" icon="format_list_numbered" />
-            <BlockButton format="bulleted-list" icon="format_list_bulleted" />
-          </>
-        )}
-      </Toolbar>
-      <Editable
-        data-variant={variant}
-        data-testid="slate-content-editable"
-        renderElement={renderElement}
-        renderLeaf={renderLeaf}
-        placeholder="Enter some rich text…"
-        autoFocus
-        onKeyDown={(event) => {
-          for (const hotkey in HOTKEYS) {
-            if (isHotkey(hotkey, event as any)) {
-              event.preventDefault()
-              //   @ts-ignore
-              const mark = HOTKEYS[hotkey]
-              toggleMark(editor, mark)
-            }
+
+    const editableProps: EditableProps = {
+      renderElement,
+      renderLeaf,
+      placeholder: "Enter some rich text…",
+      autoFocus: true,
+      onKeyDown: (event) => {
+        for (const hotkey in HOTKEYS) {
+          if (isHotkey(hotkey, event as any)) {
+            event.preventDefault()
+            //   @ts-ignore
+            const mark = HOTKEYS[hotkey]
+            toggleMark(editor, mark)
           }
-        }}
-      />
-    </Slate>
-  )
-}
+        }
+      }
+    }
+
+    /**
+     * Disable scrollSelectionIntoView when testing.
+     * We do this to fix `TypeError: Cannot read property 'bind' of undefined`
+     * that stems from https://github.com/ianstormtaylor/slate/blob/43ca2b56c8bd8bcc30dd38808dd191f804d53ae4/packages/slate-react/src/components/editable.tsx#L1369
+     * and https://github.com/ianstormtaylor/slate/blob/43ca2b56c8bd8bcc30dd38808dd191f804d53ae4/packages/slate-react/src/components/editable.tsx#L234
+     * 
+     * This error was encountered when testing dropEvent for images
+    */
+    // TODO: Maybe there is a better fix than this, please check the test file to figure if there is any
+    if (mockEditor) {
+      editableProps.scrollSelectionIntoView = () => { }
+    }
+
+    return (
+      <Slate editor={editor} value={value} onChange={(value) => setValue(value)}>
+        <Toolbar>
+          <MarkButton format="bold" icon="format_bold" />
+          <MarkButton format="italic" icon="format_italic" />
+          <MarkButton format="underline" icon="format_underlined" />
+          <MarkButton format="code" icon="code" />
+          {variant === 'wordProcessor' && (
+            <>
+              <BlockButton format="heading-one" icon="looks_one" />
+              <BlockButton format="heading-two" icon="looks_two" />
+              <BlockButton format="block-quote" icon="format_quote" />
+              <BlockButton format="numbered-list" icon="format_list_numbered" />
+              <BlockButton format="bulleted-list" icon="format_list_bulleted" />
+            </>
+          )}
+        </Toolbar>
+        <Editable
+          data-variant={variant}
+          data-testid="slate-content-editable"
+          {...editableProps}
+          onDrop={({dataTransfer})=>{
+            console.log(dataTransfer.files[0].name)
+          }}
+        />
+      </Slate>
+    )
+  }
 
 const toggleBlock = (editor: Editor, format: any) => {
   const isActive = isBlockActive(editor, format)
@@ -157,6 +180,8 @@ const Element: FC<any> = ({ attributes, children, element }) => {
       return <li {...attributes}>{children}</li>
     case 'numbered-list':
       return <ol {...attributes}>{children}</ol>
+    case 'image':
+      return <Image element={element} {...attributes}>{children}</Image>
     default:
       return <p {...attributes}>{children}</p>
   }

@@ -35,6 +35,7 @@ export type HeadingTwoElement = { type: 'heading-two'; children: Descendant[] }
 export type ImageElement = {
   type: 'image'
   url: string
+  caption: string
   children: EmptyText[]
 }
 
