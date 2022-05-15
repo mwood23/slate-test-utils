@@ -1,7 +1,5 @@
 # Slate Test Utils
 
-> 📣 Love Slate and looking for your next gig? Sirona Medical is [hiring](https://sironamedical.com/about-us/careers/)!
-
 A toolkit to test Slate rich text editors with Jest, React Testing Library, and hyperscript! Write user centric integration tests with ease. Read the [announcement](https://www.marcuswood.io/blog/effective-slate-testing-using-react-testing-library).
 
 - 🚀 Works with Jest, React Testing Library, and JSDOM (Create React App and Vite friendly)
@@ -19,7 +17,9 @@ A toolkit to test Slate rich text editors with Jest, React Testing Library, and 
 
 Want to learn more about Slate? [Join the newsletter.](https://marcuswood.ck.page/slate)
 
-https://user-images.githubusercontent.com/13633613/141721067-2c1984ac-d73f-4984-a0c8-2bea1be0d389.mp4
+
+
+https://user-images.githubusercontent.com/13633613/168461296-8e72eae3-9438-4f81-9153-20265e97a3f4.mp4
 _Created with [Wave Snippets](https://wavesnippets.com/)_
 
 ![](/static/test-results.png)
