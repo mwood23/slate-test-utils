@@ -1,9 +1,9 @@
 /** @jsx jsx */
 
-import { assertOutput, buildTestHarness } from '../../../dist/esm'
+import { fireEvent } from '@testing-library/dom'
+import { assertOutput, buildTestHarness } from '../../../../dist/esm'
 import { RichTextExample } from '../Editor'
 import { jsx } from '../test-utils'
-import { fireEvent } from '@testing-library/dom'
 
 it('user inserts an bulleted list with a few items', async () => {
   const input = (

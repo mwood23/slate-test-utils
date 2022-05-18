@@ -1,9 +1,8 @@
 /** @jsx jsx */
 
-import { assertOutput, buildTestHarness } from '../../../dist/esm'
+import { buildTestHarness } from '../../../../dist/esm'
 import { RichTextExample } from '../Editor'
 import { jsx } from '../test-utils'
-import { fireEvent } from '@testing-library/dom'
 
 it('snapshot = user triggers bold hotkey and types with a collapsed selection', async () => {
   const input = (
@@ -132,7 +131,6 @@ it('snapshot = user triggers bold hotkey and types with a collapsed selection', 
       </div>
       <div
         contenteditable="true"
-        data-gramm="false"
         data-slate-editor="true"
         data-slate-node="value"
         data-testid="slate-content-editable"

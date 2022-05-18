@@ -1,0 +1,33 @@
+{
+  "name": "slate-playground",
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "serve": "vite preview",
+    "test": "jest --verbose",
+    "test:watch": "jest --watch --verbose",
+    "postinstall": "patch-package"
+  },
+  "dependencies": {
+    "emotion": "^10.0.9",
+    "slate": "^0.70.0",
+    "slate-history": "^0.66.0",
+    "slate-hyperscript": "^0.67.0",
+    "slate-react": "^0.70.0"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^5.15.0",
+    "@testing-library/react": "^12.1.2",
+    "@types/jest": "^27.0.0",
+    "@types/react": "^16.8.0",
+    "@types/react-dom": "^16.8.0",
+    "@vitejs/plugin-react": "^1.0.0",
+    "jest": "^27.3.1",
+    "jsdom": "^19.0.0",
+    "patch-package": "^6.4.7",
+    "ts-jest": "^27.0.7",
+    "typescript": "^4.3.2",
+    "vite": "^2.8.6"
+  }
+}
