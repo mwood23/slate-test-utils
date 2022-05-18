@@ -38,6 +38,7 @@ export type RenderEditorReturnTuple = [
     selectAll: () => Promise<void>
     isApple: () => boolean
     rerender: () => void
+    getEditorElement: () => HTMLElement
   },
   ReturnType<typeof render>,
 ]
@@ -343,6 +344,7 @@ export const buildTestHarness =
         selectAll,
         isApple,
         rerender: () => options.rerender(<Component {...proppies} />),
+        getEditorElement: () => element
       },
       options,
     ]

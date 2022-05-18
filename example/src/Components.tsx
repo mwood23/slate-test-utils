@@ -7,6 +7,8 @@ import React, { PropsWithChildren } from 'react'
 import ReactDOM from 'react-dom'
 import { cx, css } from 'emotion'
 import { FC } from 'react'
+import { useSelected, useFocused } from 'slate-react'
+import { ImageElement } from './custom-types'
 
 interface BaseProps {
   className: string
@@ -40,8 +42,8 @@ export const Button = React.forwardRef(
               ? 'white'
               : '#aaa'
             : active
-            ? 'black'
-            : '#ccc'};
+              ? 'black'
+              : '#ccc'};
         `,
       )}
     />
@@ -128,3 +130,34 @@ export const Toolbar = React.forwardRef(
     />
   ),
 )
+
+export const Image = React.forwardRef(
+  (
+    { element, attributes, children }: { element: ImageElement, attributes: any, children: React.ReactNode },
+    ref: any
+  ) => {
+    const selected = useSelected();
+    const focused = useFocused();
+
+    return (
+      <div
+        ref={ref} {...attributes}
+      >
+        <div contentEditable={false}
+          style={{ position: 'relative', height: '20rem' }}
+        >
+          <img
+            src={element.url}
+            alt={element.caption}
+            className={selected && focused ? 'selected focused' : ''}
+          />
+        </div>
+        {
+          /* see https://github.com/ianstormtaylor/slate/issues/3930#issuecomment-723288696 */
+          children
+        }
+      </div>
+
+    )
+  }
+);

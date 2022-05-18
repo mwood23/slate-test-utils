@@ -9,6 +9,7 @@ declare namespace JSX {
       italic?: boolean
       children?: any
     }
+    himage: any
     hbulletedlist: any
     hlistitem: any
     cursor: any

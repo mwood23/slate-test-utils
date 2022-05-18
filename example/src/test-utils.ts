@@ -10,6 +10,7 @@ export const jsx = createHyperscript({
     hp: { type: 'paragraph' },
     hbulletedlist: { type: 'bulleted-list' },
     hlistitem: { type: 'list-item' },
+    himage: { type: 'image' },
     inline: { inline: true },
     block: {},
     wrapper: {},

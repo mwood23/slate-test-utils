@@ -354,6 +354,7 @@ redo: () => Promise<void>
 selectAll: () => Promise<void>
 isApple: () => boolean
 rerender: () => void
+getEditorElement: () => HTMLElement
 ```
 
 #### Queries
